@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Making your own game</title>
+		<style>
+			body { margin: 10px auto; width: 80%; }
+			p, li { font-size: 18px; }
+			pre { border: 1px dashed; font-size: 16px; overflow: auto; padding: 10px; }
+			a { text-decoration: none; }
+			a:hover { text-decoration: underline; }
+			#gameplay { border: 1px solid; }
+			ol > li { margin-bottom: 6px; }
+		</style>
+	</head>
+	<body>
+		<h2>Making your own HTML/JavaScript game</h2>
+
+		<p>In this exercise, you will use your recently-acquired knowledge of HTML, CSS, and JavaScript to create a simple game known as Flood-It. In this game, there is a grid of colored squares, and the player  tries to fill the entire grid with a single color within a limited number of moves. The player does this by selecting a color, which will flood fill the grid with that color starting from the top left corner. To get a feel for the game, there is a GIF below that shows the ideal gameplay.</p>
+
+		<img id="gameplay" src="gameplay.gif" alt="[image not found]">
+
+		<p>Before you actually create the game, we'd like you to have some practice using <a href="http://alloyui.com/" target="_blank">AlloyUI</a>, a JavaScript library built by folks at Liferay that allows you to quickly create powerful HTML components. If you are not yet familiar with AlloyUI, browse through the tutorials and examples on the website, trying to understand how components work and how you would create them. Pay particular attention to:
+		</p>
+
+		<ul>
+			<li><a href="http://alloyui.com/tutorials/form-validator/" target="_blank">Form Validator</a></li>
+
+			<li><a href="http://alloyui.com/tutorials/node/" target="_blank">Node</a></li>
+
+			<li><a href="http://alloyui.com/tutorials/color-picker/" target="_blank">Color Picker</a> (if the link is broken, try <a href="http://alloyui.com/versions/1.5.x/tutorials/color-picker/" target="_blank">version 1.5.x</a>)</li>
+
+			<li><a href="http://alloyui.com/tutorials/overlay-mask/" target="_blank">Overlay Mask</a> (if the link is broken, try <a href="http://alloyui.com/versions/1.5.x/tutorials/overlay-mask/" target="_blank">version 1.5.x</a>)</li>
+		</ul>
+
+		<h3>Instructions</h3>
+
+		<p>This section provides step-by-step instructions for creating the game. They have been divided into distinct steps so that you can test each piece of your code before moving on to the next one. As you write your code, be sure to obey Liferay's <a href="http://in.liferay.com/web/global.engineering/wiki/-/wiki/Core+Development+Main/Peer+Reviews+Checklist" target="_blank">source formatting guidelines</a>.
+
+		<ol>
+			<li>Create a form with a Form Validator.
+				<ul>
+					<li>Your form should have at least four fields.</li>
+					<li>Two of these should be used by the player to input the desired board size and number of colors.</li>
+
+					<li>Each field should be required and have some restriction on the format of its input.</li>
+
+					<li>If you choose to use text boxes to input the board size and number of colors fields, make sure to require that the player enters reasonable values.<sup id="ref1"><a href="#tip1">[Tip 1]</a></sup></li>
+
+					<li>Your form should have a reset button and a submit button.</li>
+				</ul>
+			</li>
+
+			<li>Write a function that uses AlloyUI's Node module to generate a new game board and append it to your HTML document.<sup id="ref2"><a href="#tip2">[Tip 2]</a></sup> This function should be called when the form is submitted with valid input.<sup id="ref3"><a href="#tip3">[Tip 3]</a></sup>
+				<ul>
+					<li>Get the player's desired number of colors and board size from the appropriate form fields.<sup id="ref4"><a href="#tip4">[Tip 4]</a></sup><sup id="ref5"><a href="#tip5">[Tip 5]</a></sup></li>
+
+					<li>Create a counter to keep track of the number of moves remaning.<sup id="ref6"><a href="#tip6">[Tip 6]</a></sup></li>
+
+					<li>Create a button that displays the game rules when pressed.</li>
+
+					<li>Create a button that will allow the player to change the game colors. It doesn't need to do anything when clicked yet.</li>
+
+					<li>Create a set of colored buttons that will call a function to flood fill the board when clicked.<sup id="ref7"><a href="#tip7">[Tip 7]</a></sup> Don't worry about the function definition yet.</li>
+
+					<li>Generate the game board.<sup id="ref8"><a href="#tip8">[Tip 8]</a></sup></li>
+
+					<li>Initialize a list of the default colors that will be used in the game.</li>
+
+					<li>Set the background color of each cell in the board to a randomly chosen color from the list.<sup id="ref9"><a href="#tip9">[Tip 9]</a></sup><sup id="ref10"><a href="#tip10">[Tip 10]</a></sup></li>
+				</ul>
+			When you are finished, apply CSS styles (in a separate stylesheet) so that your game is aesthetically pleasing.</li>
+
+			<li>Write two functions to perform the flood fill operation.
+				<ul>
+					<li>Let Function A be the one that is called when any of the colored buttons is pressed. Function A should check to make sure the player is not out of moves, has not already won, and did not select the color that is currently that of the top left cell. If these conditions are satisfied, it should passs the color of the top left cell as one of the arguments to Function B.</li>
+
+					<li>Function B will be recursive, meaning that it will repeatedly call itself until it has finished executing. This function should, given a cell, check the current cell to see if its color is equal to the inital color of the top left cell. If so, it should set the color of the current cell to the color that was selected and call itself on all four neighboring cells. (Beware of infinite recursion! It will crash your browser. The function should also not attempt to fill cells that are outside of the board.)<sup id="ref11"><a href="#tip11">[Tip 11]</a></sup><sup id="ref12"><a href="#tip12">[Tip 12]</a></sup></li>
+
+					<li>When Function B has terminated, Function A should decrement the number of moves remaining and check whether or not the player has won or lost. If the player has won or lost, the player should be notified and further attempts to change the color of squares on the board should not do anything.</li>
+				</ul>
+			At this point, your game should be fully functional except for the ability to change the colors.</li>
+
+			<li>Write code to allow the player to change the colors being used in the game. <sup id="ref13"><a href="#tip13">[Tip 13]</a></sup>
+				<ul>
+					<li>Write a function that places an overlay mask over the game. This function should add a save button, a cancel button, and an appropriate number of color pickers and place them over or next to the mask. The color pickers should be initialized so that their initially-selected colors are the same as those currently being used in the game.<sup id="ref14"><a href="#tip14">[Tip 14]</a></sup> This function is the one that should be called when the player presses the button to change the colors.</li>
+
+					<li>Write a helper function that checks whether any two of the selected colors are identical or very similar.<sup id="ref15"><a href="#tip15">[Tip 15]</a></sup> (It is up to you to define similarity and determine an appropriate cutoff level.)</li>
+
+					<li>When the cancel button is pressed, the code should check whether all of the <i>original</i> colors are sufficiently different. If so, the overlay mask should be hidden.</li>
+
+					<li>When the save button is pressed, the code should check whether all of the <i>selected</i> colors are sufficiently different.<sup id="ref16"><a href="#tip16">[Tip 16]</a></sup> If so, the overlay mask should be hidden, the appropriate colors on the board should be changed, and the list of colors should be updated.</li>
+
+					<li>The code should also check for similar colors when a new game is created. This can happen if additional colors were added and one of the original colors was changed to be similar to one of the new ones. </li>
+
+					<li>Apply CSS styles so that all elements are positioned well. It would also be beneficial to be able to see the colors that have been selected after the colorpickers have been minimized.<sup id="ref17"><a href="#tip17">[Tip 17]</a></sup><sup id="ref18"><a href="#tip18">[Tip 18]</a></sup></li>
+				</ul>
+			</li>
+		</ol>
+
+		<h3>Tips</h3>
+
+		<p>This section contains tips that you will probably find useful as you build your game. Following these tips is optional because there are multiple ways to perform these tasks, but taking the advice below will probably make these tasks easier.</p>
+
+		<ol>
+			<li id="tip1"><b><a href="#ref1">^</a></b> Consider using the <code>range</code> attribute in the <code>rules</code> for the form validator. This attribute uses the same syntax as <code>rangeLength</code> and specifies a minimum and maximum numeric value that a field can take.</li>
+
+			<li id="tip2"><b><a href="#ref2">^</a></b> Consider hard-coding a <code>&lt;div&gt;</code> element into the <code>&lt;body&gt;</code> of your HTML document to contain the game. This way, you can use the <code>.empty()</code> method to destroy the board every time you start a new game.</li>
+
+			<li id="tip3"><b><a href="#ref3">^</a></b> One way to cause an action to be taken on submit is by adding an <code>action</code> attribute to your <code>&lt;form&gt;</code> element, as follows:
+				<pre>&lt;form action="javascript:functionNameGoesHere()" id="idGoesHere"&gt;</pre>
+			</li>
+
+			<li id="tip4"><b><a href="#ref4">^</a></b> Take a look at <code>Y.one()</code>, the <code>.get()</code> method, and <code>parseInt()</code>.</li>
+
+			<li id="tip5"><b><a href="#ref5">^</a></b> We suggest that you declare the number of colors and board size as global variables because you will need them later on.</li>
+
+			<li id="tip6"><b><a href="#ref6">^</a></b> A suitable formula for the initial number of moves is 0.3 times the board size times the number of colors, rounded down. Feel free to modify this formula if you believe that it is imbalanced.</li>
+
+			<li id="tip7"><b><a href="#ref7">^</a></b> One way to cause one of these buttons to execute a function when clicked is to add an <code>onclick</code> attribute to your HTML element, as follows:
+				<pre>&lt;td onclick="functionNameGoesHere(#)"&gt;</pre>
+			In this case, <code>#</code> would be replaced by an index corresponding to the color that the player desires to flood fill the board with. You can use the <code>.toString()</code> method and string concatenation to appropriately append the index to the function call.</li>
+
+			<li id="tip8"><b><a href="#ref8">^</a></b> The simplest way to generate the board is by making a table with N rows and N cells per row, where N is the player's desired board size. Node and the creative use of loops will allow you to do this in a few lines of code.</li>
+
+			<li id="tip9"><b><a href="#ref9">^</a></b> AlloyUI objects have a <code>.setStyle()</code> method.</li>
+
+			<li id="tip10"><b><a href="#ref10">^</a></b> You may want to have a helper function that returns a single cell of the board if you pass in the row and column. In this function, you will either need to use the <code>:nth-child()</code> selector or have attributes in your cells that specify the row and column.</li>
+
+			<li id="tip11"><b><a href="#ref11">^</a></b> If you get stuck and need a better explanation of recursion and the flood fill algorithm, try <a href="http://inventwithpython.com/blog/2011/08/11/recursion-explained-with-the-flood-fill-algorithm-and-zombies-and-cats/" target="_blank">this link</a>.</li>
+
+			<li id="tip12"><b><a href="#ref12">^</a></b> You may find yourself needing to compare colors in <code>rgb(#, #, #)</code> format with colors in hexadecimal format. You may use the function below to convert colors in <code>rgb(#, #, #)</code> format to hexadecimal. Please note that this function will return hexadecimal values using lower-case letters, and string comparison is case-sensitive.
+				<pre>function colorToHex(color) {
+	if (color.substring(0, 1) === '#') {
+		return color;                                               // if the number is already in hexadecimal, do nothing
+	}
+	var digits = /(.*?)rgb\((\d+), (\d+), (\d+)\)/.exec(color);         // use a regexp to separate the r, g, and b values
+	var red = parseInt(digits[2]);
+	var green = parseInt(digits[3]);                                    // convert these values from strings to numbers
+	var blue = parseInt(digits[4]);
+	var hexNum = 16777216 | blue | (green &lt;&lt; 8) | (red &lt;&lt; 16);          // use shifting and the bitwise OR operator to form a hex number
+	return '#' + hexNum.toString(16).slice(1);                          // convert it to a string and put a '#' in front
+}</pre>
+			</li>
+
+			<li id="tip13"><b><a href="#ref13">^</a></b> Think about how you will structure the code related to the overlay mask before you write it. One way to do it would be to have a large block of code that uses AlloyUI's Color Picker and Overlay Mask modules. Within this block, you can have a section where you create the mask and HTML elements that will be added to the game, a section where you specify the actions to be taken when the save and cancel buttons are pressed, and a function to display the mask and create the appropriate number of color pickers. Outside of this block, you can have a global function that checks if any of the colors are similar.</li>
+
+			<li id="tip14"><b><a href="#ref14">^</a></b> To set the color of a color picker in the code, call the <code>.set()</code> method using <code>'hex'</code> as the first argument and a string representing a hexidecimal color without the <code>'#'</code> prefix.</li>
+
+			<li id="tip15"><b><a href="#ref15">^</a></b> You may want to give the function that checks whether the colors are sufficiently different an argument that tells it whether to use the list of current colors or the colors stored in the color pickers.</li>
+
+			<li id="tip16"><b><a href="#ref16">^</a></b> The Color Picker object has a <code>.get()</code> method. If you call it using <code>'rgb'</code> as the argument, what is returned?</li>
+
+			<li id="tip17"><b><a href="#ref17">^</a></b> To be able to see the colors that have been selected, you will need a function handler that sets the background color of an element when the <code>'colorChange'</code> event is fired. To see how this works, check out <a href="http://alloyui.com/versions/1.5.x/examples/color-picker/real-world" target="_blank">this example</a>. You will want to use <code>.after()</code> rather than <code>.on()</code> to avoid a 1-color delay in changing the color of your indicator element.</li>
+
+			<li id="tip18"><b><a href="#ref18">^</a></b> If your color pickers are stored in an array, your event handler function will not have access to the array index. To get around this, you can, using the <code>.set()</code> method, give each color picker an attribute that stores the position of that color picker in the array. You can then retrieve this index inside the event handler function by calling <code>this.get()</code>.</li>
+		</ol>
+
+		<p>Good luck!</p>
+	</body>
+</html>
