@@ -1,5 +1,6 @@
-var colorPickers;
 var colorList = ['#ff0000', '#00ff00', '#0000ff', '#fff800', '#880099', '#ffaa00', '#f800ff', '#00fff8'];
+
+var colorPickers;
 var numColors;
 var size;
 
@@ -10,12 +11,12 @@ AUI().use(
 			{
 				boundingBox: '#myForm',
 				rules: {
-					size: {
-						range: [6, 26],
-						required: true
-					},
 					colors: {
 						range: [3, 8],
+						required: true
+					},
+					size: {
+						range: [6, 26],
 						required: true
 					}
 				}
@@ -32,9 +33,13 @@ AUI().ready(
 
 		var container = A.Node.create('<div id="container"><div>');
 
-		var colorPickerDiv = A.Node.create('<div id="colorPickers"></div>').appendTo(container);
-		var save = A.Node.create('<button>Save</button>').appendTo(container);
-		var cancel = A.Node.create('<button>Cancel</button>').appendTo(container);
+		var cancel = A.Node.create('<button>Cancel</button>');
+		var colorPickerDiv = A.Node.create('<div id="colorPickers"></div>');
+		var save = A.Node.create('<button>Save</button>');
+
+		colorPickerDiv.appendTo(container);
+		save.appendTo(container);
+		cancel.appendTo(container);
 
 		cancel.on(
 			'click',
@@ -44,6 +49,7 @@ AUI().ready(
 				}
 				else {
 					overlayMask.hide();
+
 					container.remove();
 				}
 			}
@@ -57,13 +63,18 @@ AUI().ready(
 				}
 				else {
 					overlayMask.hide();
+
 					container.remove();
 
 					A.all('#main td').each(
 						function() {
 							for (var i = 0; i < numColors; i++) {
-								if (colorToHex(this.getStyle('background-color')) === colorList[i]) {
-									this.setStyle('background-color', colorPickers[i].get('rgb').hex);
+								var backgroundColor = this.getStyle('background-color');
+
+								if (colorToHex(backgroundColor) === colorList[i]) {
+									var currentRgb = colorPickers[i].get('rgb');
+
+									this.setStyle('background-color', currentRgb.hex);
 								}
 							}
 						}
@@ -72,7 +83,13 @@ AUI().ready(
 					for (var i = 0; i < numColors; i++) {
 						var color = colorPickers[i].get('rgb').hex;
 
-						A.one('#input td:nth-child(' + (i+1).toString() + ')').setStyle('background-color', color);
+						var index = (i + 1).toString();
+
+						var colorButton = A.one('#input td:nth-child(' + index + ')');
+
+						if (colorButton) {
+							colorButton.setStyle('background-color', color);
+						}
 
 						colorList[i] = color;
 					}
@@ -81,22 +98,33 @@ AUI().ready(
 		);
 
 		createMask = function(elem) {
-			overlayMask.set('target', elem).show();
+			overlayMask.set('target', elem);
+			overlayMask.show();
 
-			container.appendTo(A.one('#game'));
+			var game = A.one('#game');
 
-			var position = (16*(size+3)).toString();
+			if (game) {
+				container.appendTo(game);
+			}
+
+			var position = (16 * (size + 3)).toString();
+
 			container.setStyle('top', '-' + position + 'px');
 
 			colorPickers = new Array(numColors);
+
 			colorPickerDiv.empty();
 
 			for (i = 0; i < numColors; i++) {
-				var colorPickerNode = A.Node.create('<div class="colorPicker" id="colorPicker' + i.toString() + '"></div>');
+				var htmlContent = '<div class="colorPicker" id="colorPicker' + i.toString() + '"></div>';
+
+				var colorPickerNode = A.Node.create(htmlContent);
+
 				colorPickerNode.setStyle('background-color', colorList[i]);
 				colorPickerNode.appendTo(colorPickerDiv);
 
 				colorPickers[i] = new A.ColorPicker().render(colorPickerNode);
+
 				colorPickers[i].set('hex', colorList[i].slice(1));
 				colorPickers[i].set('index', i);
 
@@ -104,7 +132,14 @@ AUI().ready(
 					'colorChange',
 					function(event) {
 						var j = this.get('index');
-						A.one('#colorPicker' + j.toString()).setStyle('background-color', colorPickers[j].get('rgb').hex);
+
+						var color = colorPickers[j].get('rgb').hex;
+
+						var colorPicker = A.one('#colorPicker' + j.toString());
+
+						if (colorPicker) {
+							colorPicker.setStyle('background-color', color);
+						}
 					}
 				);
 			}
@@ -126,14 +161,14 @@ function similarColors(type) {
 	for (var i = 0; i < numColors; i++) {
 		for (var j = 0; j < i; j++) {
 			if (type === 'pickers') {
-				var diffR = Math.abs(chosenColors[i].r - chosenColors[j].r);
-				var diffG = Math.abs(chosenColors[i].g - chosenColors[j].g);
 				var diffB = Math.abs(chosenColors[i].b - chosenColors[j].b);
+				var diffG = Math.abs(chosenColors[i].g - chosenColors[j].g);
+				var diffR = Math.abs(chosenColors[i].r - chosenColors[j].r);
 			}
 			else if (type === 'buttons') {
-				var diffR = Math.abs(parseInt(colorList[i].substring(1, 3), 16) - parseInt(colorList[j].substring(1, 3), 16));
-				var diffG = Math.abs(parseInt(colorList[i].substring(3, 5), 16) - parseInt(colorList[j].substring(3, 5), 16));
 				var diffB = Math.abs(parseInt(colorList[i].substring(5, 7), 16) - parseInt(colorList[j].substring(5, 7), 16));
+				var diffG = Math.abs(parseInt(colorList[i].substring(3, 5), 16) - parseInt(colorList[j].substring(3, 5), 16));
+				var diffR = Math.abs(parseInt(colorList[i].substring(1, 3), 16) - parseInt(colorList[j].substring(1, 3), 16));
 			}
 
 			if (diffR + diffG + diffB < 50) {
