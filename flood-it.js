@@ -335,7 +335,7 @@ function getTableCell(i, j) {
 }
 
 function colorToHex(color) {
-	if (color.substring(0, 1) === '#') {
+	if (color[0] === '#') {
 		return color;
 	}
 

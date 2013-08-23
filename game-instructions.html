@@ -130,16 +130,20 @@
 
 			<li id="tip12"><b><a href="#ref12">^</a></b> You may find yourself needing to compare colors in <code>rgb(#, #, #)</code> format with colors in hexadecimal format. You may use the function below to convert colors in <code>rgb(#, #, #)</code> format to hexadecimal. Please note that this function will return hexadecimal values using lower-case letters, and string comparison is case-sensitive.
 				<pre>function colorToHex(color) {
-	if (color.substring(0, 1) === '#') {
-		return color;                                               // if the number is already in hexadecimal, do nothing
-	}
-	var digits = /(.*?)rgb\((\d+), (\d+), (\d+)\)/.exec(color);         // use a regexp to separate the r, g, and b values
-	var red = parseInt(digits[2]);
-	var green = parseInt(digits[3]);                                    // convert these values from strings to numbers
+	if (color[0] === '#') {
+		return color;
+	}	// if the number is already in hexadecimal, do nothing
+	var digits = /(.*?)rgb\((\d+), (\d+), (\d+)\)/.exec(color);
+		// use a regexp to separate the r, g, and b values
 	var blue = parseInt(digits[4]);
-	var hexNum = 16777216 | blue | (green &lt;&lt; 8) | (red &lt;&lt; 16);          // use shifting and the bitwise OR operator to form a hex number
-	return '#' + hexNum.toString(16).slice(1);                          // convert it to a string and put a '#' in front
-}</pre>
+	var green = parseInt(digits[3]);
+	var red = parseInt(digits[2]);
+		// convert these values from strings to numbers
+	var hexNum = 16777216 | blue | (green &lt;&lt; 8) | (red &lt;&lt; 16);
+		// use shifting and the bitwise OR operator to form a hex number
+	return '#' + hexNum.toString(16).slice(1);
+}		// convert it to a string and put a '#' in front
+</pre>
 			</li>
 
 			<li id="tip13"><b><a href="#ref13">^</a></b> Think about how you will structure the code related to the overlay mask before you write it. One way to do it would be to have a large block of code that uses AlloyUI's Color Picker and Overlay Mask modules. Within this block, you can have a section where you create the mask and HTML elements that will be added to the game, a section where you specify the actions to be taken when the save and cancel buttons are pressed, and a function to display the mask and create the appropriate number of color pickers. Outside of this block, you can have a global function that checks if any of the colors are similar.</li>
