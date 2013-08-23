@@ -276,7 +276,9 @@ function rules() {
 function flood(i) {
 	var firstCell = getTableCell(1, 1);
 
-	var firstColor = colorToHex(firstCell.getStyle('background-color'));
+	if (firstCell) {
+		var firstColor = colorToHex(firstCell.getStyle('background-color'));
+	}
 
 	if (moves > 0 && !win() && colorList[i] !== firstColor) {
 		expand(colorList[i], firstColor, 1, 1);
@@ -301,15 +303,17 @@ function flood(i) {
 function expand(newColor, oldColor, row, col) {
 	var currentCell = getTableCell(row, col);
 
-	var currentColor = colorToHex(currentCell.getStyle('background-color'));
+	if (currentCell) {
+		var currentColor = currentCell.getStyle('background-color');
 
-	if (row >= 1 && col >= 1 && row <= size && col <= size && currentColor === oldColor) {
-		currentCell.setStyle('background-color', newColor);
+		if (colorToHex(currentColor) === oldColor) {
+			currentCell.setStyle('background-color', newColor);
 
-		expand(newColor, oldColor, row+1, col);
-		expand(newColor, oldColor, row-1, col);
-		expand(newColor, oldColor, row, col+1);
-		expand(newColor, oldColor, row, col-1);
+			expand(newColor, oldColor, row+1, col);
+			expand(newColor, oldColor, row-1, col);
+			expand(newColor, oldColor, row, col+1);
+			expand(newColor, oldColor, row, col-1);
+		}
 	}
 }
 
