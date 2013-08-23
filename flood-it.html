@@ -7,28 +7,33 @@
 		<link href="flood-it.css" rel="stylesheet" type="text/css">
 		<script src="flood-it.js" type="text/javascript"></script>
 	</head>
+
 	<body>
-		<form id="myForm" action="javascript:newGame()">
+		<form action="javascript:newGame()" id="myForm">
 			<p>
 				<label class="aui-field-label" for="name">Name:</label>
 
-				<input class="aui-field-required" type="text" name="name" />
+				<input class="aui-field-required" name="name" type="text" />
 			</p>
+
 			<p>
 				<label class="aui-field-label" for="email">Email:</label>
 
-				<input class="aui-field-required aui-field-email" type="text" name="email" />
+				<input class="aui-field-required aui-field-email" name="email" type="text" />
 			</p>
+
 			<p>
 				<label class="aui-field-label" for="size">Board Size:</label>
 
-				<input class="aui-field-required aui-field-digits" type="text" name="size" id="size" />
+				<input class="aui-field-required aui-field-digits" id="size" name="size" type="text" />
 			</p>
+
 			<p>
 				<label class="aui-field-label" for="colors">Number of Colors:</label>
 
-				<input class="aui-field-required aui-field-digits" type="text" name="colors" id="colors" />
+				<input class="aui-field-required aui-field-digits" id="colors" name="colors" type="text" />
 			</p>
+
 			<p>
 				<input class="aui-button-input" type="submit" value="New Game" />
 
