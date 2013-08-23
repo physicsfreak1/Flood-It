@@ -72,9 +72,9 @@ AUI().ready(
 								var backgroundColor = this.getStyle('background-color');
 
 								if (colorToHex(backgroundColor) === colorList[i]) {
-									var currentRgb = colorPickers[i].get('rgb');
+									var currentRGB = colorPickers[i].get('rgb');
 
-									this.setStyle('background-color', currentRgb.hex);
+									this.setStyle('background-color', currentRGB.hex);
 								}
 							}
 						}
@@ -184,10 +184,15 @@ function newGame() {
 	AUI().use(
 		'aui-base',
 		function(A) {
-			numColors = parseInt(A.one('#colors').get('value'));
-			size = parseInt(A.one('#size').get('value'));
+			var colorsInput = A.one('#colors');
+			var sizeInput = A.one('#size');
 
-			createBoard(numColors, size);
+			if (colorsInput && sizeInput) {
+				numColors = parseInt(colorsInput.get('value'));
+				size = parseInt(sizeInput.get('value'));
+
+				createBoard(numColors, size);
+			}
 
 			for (i = 1; i <= size; i++) {
 				for (j = 1; j <= size; j++) {
@@ -197,8 +202,13 @@ function newGame() {
 				}
 			}
 
-			moves = Math.floor(0.3*size*numColors);
-			A.one('#moves').html(moves.toString());
+			moves = Math.floor(0.3 * size * numColors);
+
+			var movesCount = A.one('#moves');
+
+			if (movesCount) {
+				movesCount.html(moves.toString());
+			}
 
 			if (similarColors('buttons')) {
 				createMask('#game');
@@ -211,20 +221,36 @@ function createBoard(numColors, size) {
 	AUI().use(
 		'aui-node',
 		function(A) {
-			var holder = A.one('#game');
-			holder.empty();
-			A.Node.create('<div id="gameInfo"><p id="movesCount">moves remaining: <span id="moves"><span></p><button id="rules" type="button" onclick="rules()">Rules</button><button id="colorChange" onclick="createMask(\'#game\')" type="button">Change Colors</button><table id="input"><tr id="table-row"></tr></table></div>').appendTo(holder);
+			var game = A.one('#game');
 
-			var colorButton = new Array(numColors);
-			var subHolder = A.one('#table-row');
-
-			for (var i = 0; i < numColors; i++) {
-				colorButton[i] = A.Node.create('<td id="colorButton' + i.toString() + '" onclick="flood(' + i.toString() + ')"></td>');
-				colorButton[i].setStyle('background-color', colorList[i]);
-				colorButton[i].appendTo(subHolder);
+			if (game) {
+				game.empty();
 			}
 
-			A.Node.create('<div id="main"><table><tbody></tbody></table></div>').appendTo(holder);
+			var gameInfo = A.Node.create('<div id="gameInfo"><p id="movesCount">moves remaining: <span id="moves"><span></p><button id="rules" type="button" onclick="rules()">Rules</button><button id="colorChange" onclick="createMask(\'#game\')" type="button">Change Colors</button><table id="input"><tr id="color-buttons"></tr></table></div>');
+
+			gameInfo.appendTo(game);
+
+			var colorButton = new Array(numColors);
+
+			var colorButtons = A.one('#color-buttons');
+
+			for (var i = 0; i < numColors; i++) {
+				var index = i.toString();
+
+				colorButton[i] = A.Node.create('<td id="colorButton' + index + '" onclick="flood(' + index + ')"></td>');
+
+				colorButton[i].setStyle('background-color', colorList[i]);
+
+				if (colorButtons) {
+					colorButton[i].appendTo(colorButtons);
+				}
+			}
+
+			var mainContent = A.Node.create('<div id="main"><table><tbody></tbody></table></div>');
+
+			mainContent.appendTo(game);
+
 			var table = A.one('#main tbody');
 
 			for (var i = 0; i < size; i++) {
@@ -232,7 +258,12 @@ function createBoard(numColors, size) {
 				for (var j = 0; j < size; j++) {
 					tdString += '<td></td>';
 				}
-				A.Node.create('<tr>'+tdString+'</tr>').appendTo(table);
+
+				var tableRow = A.Node.create('<tr>'+tdString+'</tr>');
+
+				if (table) {
+					A.Node.create('<tr>'+tdString+'</tr>').appendTo(table);
+				}
 			}
 		}
 	);
@@ -243,24 +274,37 @@ function rules() {
 }
 
 function flood(i) {
-	var firstColor = colorToHex(getTableCell(1, 1).getStyle('background-color'));
+	var firstCell = getTableCell(1, 1);
+
+	var firstColor = colorToHex(firstCell.getStyle('background-color'));
 
 	if (moves > 0 && !win() && colorList[i] !== firstColor) {
 		expand(colorList[i], firstColor, 1, 1);
 
 		moves--;
-		AUI().one('#moves').html(moves.toString());
 
-		if (win())
+		var movesCount = AUI().one('#moves');
+
+		if (movesCount) {
+			movesCount.html(moves.toString());
+		}
+
+		if (win()) {
 			alert('You win!');
-		else if (moves === 0)
+		}
+		else if (moves === 0) {
 			alert('You lose!');
+		}
 	}
 }
 
 function expand(newColor, oldColor, row, col) {
-	if (row >= 1 && col >= 1 && row <= size && col <= size && colorToHex(getTableCell(row, col).getStyle('background-color')) === oldColor) {
-		getTableCell(row, col).setStyle('background-color', newColor);
+	var currentCell = getTableCell(row, col);
+
+	var currentColor = colorToHex(currentCell.getStyle('background-color'));
+
+	if (row >= 1 && col >= 1 && row <= size && col <= size && currentColor === oldColor) {
+		currentCell.setStyle('background-color', newColor);
 
 		expand(newColor, oldColor, row+1, col);
 		expand(newColor, oldColor, row-1, col);
@@ -285,16 +329,23 @@ function win() {
 }
 
 function getTableCell(i, j) {
-	return AUI().one('#main tr:nth-child(' + i.toString() + ') td:nth-child(' + j.toString() + ')');
+	var selector = '#main tr:nth-child(' + i.toString() + ') td:nth-child(' + j.toString() + ')';
+
+	return AUI().one(selector);
 }
 
 function colorToHex(color) {
 	if (color.substring(0, 1) === '#') {
 		return color;
 	}
+
 	var digits = /(.*?)rgb\((\d+), (\d+), (\d+)\)/.exec(color);
-	var red = parseInt(digits[2]);
-	var green = parseInt(digits[3]);
+
 	var blue = parseInt(digits[4]);
-	return '#' + (16777216 | blue | (green << 8) | (red << 16)).toString(16).slice(1);
+	var green = parseInt(digits[3]);
+	var red = parseInt(digits[2]);
+
+	var hexNum = 16777216 | blue | (green << 8) | (red << 16);
+
+	return '#' + hexNum.toString(16).slice(1);
 }
