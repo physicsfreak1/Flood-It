@@ -2,22 +2,14 @@
 <html>
 	<head>
 		<title>Making your own game</title>
-		<style>
-			body { margin: 10px auto; width: 80%; }
-			p, li { font-size: 18px; }
-			pre { border: 1px dashed; font-size: 16px; overflow: auto; padding: 10px; }
-			a { text-decoration: none; }
-			a:hover { text-decoration: underline; }
-			#gameplay { border: 1px solid; }
-			ol > li { margin-bottom: 6px; }
-		</style>
+		<link href="style.css" rel="stylesheet" type="text/css" />
 	</head>
 	<body>
 		<h2>Making your own HTML/JavaScript game</h2>
 
 		<p>In this exercise, you will use your recently-acquired knowledge of HTML, CSS, and JavaScript to create a simple game known as Flood-It. In this game, there is a grid of colored squares, and the player  tries to fill the entire grid with a single color within a limited number of moves. The player does this by selecting a color, which will flood fill the grid with that color starting from the top left corner. To get a feel for the game, there is a GIF below that shows the ideal gameplay.</p>
 
-		<img id="gameplay" src="gameplay.gif" alt="[image not found]">
+		<img alt="[image not found]" id="gameplay" src="gameplay.gif" />
 
 		<p>Before you actually create the game, we'd like you to have some practice using <a href="http://alloyui.com/" target="_blank">AlloyUI</a>, a JavaScript library built by folks at Liferay that allows you to quickly create powerful HTML components. If you are not yet familiar with AlloyUI, browse through the tutorials and examples on the website, trying to understand how components work and how you would create them. Pay particular attention to:
 		</p>

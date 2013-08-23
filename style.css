@@ -1,0 +1,31 @@
+body {
+	margin: 10px auto;
+	width: 80%;
+}
+
+p, li {
+	font-size: 18px;
+}
+
+pre {
+	border: 1px dashed;
+	font-size: 16px;
+	overflow: auto;
+	padding: 10px;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+#gameplay {
+	border: 1px solid;
+}
+
+ol > li {
+	margin-bottom: 6px;
+}
